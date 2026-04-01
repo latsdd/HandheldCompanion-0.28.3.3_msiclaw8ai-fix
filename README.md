@@ -1,6 +1,6 @@
 # HandheldCompanion 0.28.3.3 - MSI Claw 修复版
 
-本项目是 [Handheld Companion](https://github.com/Valkirie/HandheldCompanion) v0.28.3.3 的 Fork 修改版，主要针对 MSI Claw 设备的 GoBackToSleep 功能进行了 Bug 修复。
+本项目是 [Handheld Companion](https://github.com/Valkirie/HandheldCompanion) v0.28.3.3 的 Fork 修改版，主要针对 MSI Claw 设备的指纹按键容易误待机后瞬间唤醒问题，对原 GoBackToSleep 功能进行了适配。
 
 ## 修改内容
 
