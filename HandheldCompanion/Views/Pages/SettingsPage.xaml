@@ -1,0 +1,355 @@
+﻿<Page
+    x:Class="HandheldCompanion.Views.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
+    xmlns:l="clr-namespace:HandheldCompanion.Localization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resx="clr-namespace:HandheldCompanion.Properties"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    Name="Settings"
+    Title="{l:Static resx:Resources.SettingsPage_Settings}"
+    d:Background="White"
+    d:DesignHeight="2400"
+    d:DesignWidth="1000"
+    KeepAlive="True"
+    Loaded="Page_Loaded"
+    mc:Ignorable="d">
+
+    <Grid Name="MainGrid" Margin="20">
+        <ikw:SimpleStackPanel Spacing="8">
+
+            <!--  Update manager  -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" MinWidth="100" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <ui:FontIcon
+                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                        FontSize="80"
+                        Foreground="{DynamicResource SystemControlBackgroundBaseHighBrush}"
+                        Glyph="&#xECC5;" />
+                    <Grid Name="GridUpdateSymbol" Visibility="Collapsed">
+                        <ui:FontIcon
+                            Margin="50,50,0,0"
+                            FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                            FontSize="30"
+                            Foreground="{DynamicResource SystemAccentColorLight2Brush}"
+                            Glyph="&#xE91F;" />
+                        <ui:FontIcon
+                            Margin="50,50,0,0"
+                            FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                            FontSize="20"
+                            Foreground="White"
+                            Glyph="&#xE73E;" />
+                    </Grid>
+                </Grid>
+
+                <ikw:SimpleStackPanel
+                    Grid.Column="1"
+                    Orientation="Vertical"
+                    Spacing="3">
+                    <TextBlock
+                        Name="LabelUpdate"
+                        FontSize="20"
+                        Foreground="{DynamicResource SystemControlBackgroundBaseHighBrush}"
+                        Style="{StaticResource BaseTextBlockStyle}"
+                        Text="{l:Static resx:Resources.SettingsPage_UpToDate}" />
+                    <TextBlock
+                        Name="LabelUpdateDate"
+                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        Text="{l:Static resx:Resources.SettingsPage_LastChecked}" />
+                    <ui:ProgressBar
+                        Name="ProgressBarUpdate"
+                        Margin="0,0,10,0"
+                        IsIndeterminate="True"
+                        Visibility="Collapsed" />
+                </ikw:SimpleStackPanel>
+
+                <Button
+                    Name="B_CheckUpdate"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Click="B_CheckUpdate_Click"
+                    Content="{l:Static resx:Resources.SettingsPage_CheckForUpdates}"
+                    Style="{DynamicResource AccentButtonStyle}" />
+            </Grid>
+
+            <!--  Changelog  -->
+            <TextBox
+                Name="CurrentChangelog"
+                MaxHeight="300"
+                IsReadOnly="True"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                Visibility="Collapsed" />
+
+            <!--  Update(s)  -->
+            <ikw:SimpleStackPanel Name="CurrentUpdates" Spacing="3" />
+
+            <!--  General options  -->
+            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="{l:Static resx:Resources.SettingsPage_GeneralOptions}" />
+            <ikw:SimpleStackPanel Spacing="3">
+                <!--  Auto-start application  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_AutoStartAppDesc}" Header="{l:Static resx:Resources.SettingsPage_AutoStartApp}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xED35;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="Toggle_AutoStart" Toggled="Toggle_AutoStart_Toggled" />
+                </ui:SettingsCard>
+
+                <!--  Open application in background  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_OpenAppBackgroundDesc}" Header="{l:Static resx:Resources.SettingsPage_OpenAppBackground}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xEE40;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="Toggle_Background" Toggled="Toggle_Background_Toggled" />
+                </ui:SettingsCard>
+
+                <!--  Close minimizes  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_CloseMinimizesDesc}" Header="{l:Static resx:Resources.SettingsPage_CloseMinimizes}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xE921;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="Toggle_CloseMinimizes" Toggled="Toggle_CloseMinimizes_Toggled" />
+                </ui:SettingsCard>
+
+                <!--  Enable desktop profile on start  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_EnableDesktopLayoutOnStartDesc}" Header="{l:Static resx:Resources.SettingsPage_EnableDesktopLayoutOnStart}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xEA6C;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="Toggle_DesktopLayoutOnStart" Toggled="Toggle_DesktopLayoutOnStart_Toggled" />
+                </ui:SettingsCard>
+
+                <!--  Application theme  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_AppThemeDesc}" Header="{l:Static resx:Resources.SettingsPage_AppTheme}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xE790;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ComboBox Name="cB_Theme" SelectionChanged="cB_Theme_SelectionChanged">
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_ThemeDefault}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_ThemeLight}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_ThemeDark}" />
+                    </ComboBox>
+                </ui:SettingsCard>
+
+                <!--  Application backdrop  -->
+                <ui:SettingsCard
+                    d:Visibility="Visible"
+                    Description="{l:Static resx:Resources.SettingsPage_BackdropDesc}"
+                    Header="{l:Static resx:Resources.SettingsPage_Backdrop}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xE790;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ComboBox Name="cB_Backdrop" SelectionChanged="cB_Backdrop_SelectionChanged">
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_BackdropNone}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_BackdropMica}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_BackdropTabbed}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_BackdropAcrylic}" />
+                    </ComboBox>
+                </ui:SettingsCard>
+
+                <!--  Application language  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_AppLanguageDesc}" Header="{l:Static resx:Resources.SettingsPage_AppLanguage}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xF2B7;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ComboBox Name="cB_Language" SelectionChanged="cB_Language_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource CultureToDisplayNameConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </ui:SettingsCard>
+
+                <!--  UI sounds  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_UISoundsDesc}" Header="{l:Static resx:Resources.SettingsPage_UISounds}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xe7f5;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="Toggle_UISounds" Toggled="Toggle_UISounds_Toggled" />
+                </ui:SettingsCard>
+
+                <!--  Telemetry  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_TelemetryDesc}" Header="{l:Static resx:Resources.SettingsPage_Telemetry}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xEC05;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="Toggle_Telemetry" Toggled="Toggle_Telemetry_Toggled" />
+                </ui:SettingsCard>
+
+                <!--  Process Priority  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_PriorityDesc}" Header="{l:Static resx:Resources.SettingsPage_Priority}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xE8D0;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ComboBox Name="cB_Priority" SelectionChanged="cB_Priority_SelectionChanged">
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_Priority_Normal}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_Priority_AboveNormal}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_Priority_High}" />
+                    </ComboBox>
+                </ui:SettingsCard>
+            </ikw:SimpleStackPanel>
+
+            <!--  Advanced options  -->
+            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Advanced options" />
+            <ikw:SimpleStackPanel Spacing="3">
+                <!--  Toast notification  (Not implemented)  -->
+                <ui:SettingsCard
+                    Description="Monitor external changes to GPU settings and automatically restore preferred configuration"
+                    Header="GPU-Settings monitoring"
+                    IsEnabled="False"
+                    Visibility="Collapsed">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.History}" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="Toggle_GPUMonitor" Toggled="Toggle_GPUMonitor_Toggled" />
+                </ui:SettingsCard>
+
+                <!--  Master Timer  -->
+                <ui:SettingsCard Description="Controller update rate. A higher rate improves responsiveness but increases CPU usage" Header="Update rate">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Stopwatch}" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ComboBox Name="cB_MasterInterval" SelectionChanged="cB_MasterInterval_SelectionChanged">
+                        <ComboBoxItem Content="125 Hz" />
+                        <ComboBoxItem Content="250 Hz" />
+                        <ComboBoxItem Content="500 Hz" />
+                        <ComboBoxItem Content="1000 Hz" />
+                    </ComboBox>
+                </ui:SettingsCard>
+            </ikw:SimpleStackPanel>
+
+            <!--  Quicktools options  -->
+            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="{l:Static resx:Resources.SettingsPage_QuickToolsOptions}" />
+            <ikw:SimpleStackPanel Spacing="3">
+                <!--  Quicktools position  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_QuickToolsWindowLocationDesc}" Header="{l:Static resx:Resources.SettingsPage_QuickToolsWindowLocation}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ComboBox Name="cB_QuicktoolsPosition" SelectionChanged="cB_QuicktoolsPosition_SelectionChanged">
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_QuickToolsWindowLocationTopLeft}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_QuickToolsWindowLocationTopRight}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_QuickToolsWindowLocationMaximized}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_QuickToolsWindowLocationBottomLeft}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_QuickToolsWindowLocationBottomRight}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_QuickToolsWindowLocationBottomCenter}" />
+                    </ComboBox>
+                </ui:SettingsCard>
+
+                <!--  Quicktools device path  -->
+                <ui:SettingsCard
+                    d:Visibility="Visible"
+                    Description="{l:Static resx:Resources.SettingsPage_QuickToolsDevicePathDesc}"
+                    Header="{l:Static resx:Resources.SettingsPage_QuickToolsDevicePath}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xE78B;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ComboBox Name="cB_QuickToolsDevicePath" SelectionChanged="cB_QuickToolsDevicePath_SelectionChanged" />
+                </ui:SettingsCard>
+
+                <!--  Quicktools backdrop  -->
+                <ui:SettingsExpander
+                    d:Visibility="Visible"
+                    Description="{l:Static resx:Resources.SettingsPage_QuickToolsBackdrop}"
+                    Header="{l:Static resx:Resources.SettingsPage_QuickToolsBackdropHeader}">
+                    <ui:SettingsExpander.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xE790;" />
+                    </ui:SettingsExpander.HeaderIcon>
+                    <ComboBox Name="cB_QuickToolsBackdrop" SelectionChanged="cB_QuickToolsBackdrop_SelectionChanged">
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_BackdropNone}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_BackdropMica}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_BackdropTabbed}" />
+                        <ComboBoxItem Content="{l:Static resx:Resources.SettingsPage_BackdropAcrylic}" />
+                    </ComboBox>
+
+                    <ui:SettingsExpander.Items>
+                        <ui:SettingsCard Header="Apply noise to window's background">
+                            <ui:ToggleSwitch Name="QuickToolsNoiseToggle" Toggled="QuickToolsNoiseToggle_Toggled" />
+                        </ui:SettingsCard>
+                    </ui:SettingsExpander.Items>
+                </ui:SettingsExpander>
+
+                <!--  Virtual keyboard  -->
+                <ui:SettingsCard
+                    Description="{l:Static resx:Resources.SettingsPage_VirtualKeyboardDesc}"
+                    Header="{l:Static resx:Resources.SettingsPage_VirtualKeyboard}"
+                    Visibility="Collapsed">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon Glyph="&#xE765;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="VirtualKeyboardToggle" Toggled="VirtualKeyboardToggle_Toggled" />
+                </ui:SettingsCard>
+
+                <!--  Virtual trackpad  -->
+                <ui:SettingsCard
+                    Description="{l:Static resx:Resources.SettingsPage_VirtualTrackpadDesc}"
+                    Header="{l:Static resx:Resources.SettingsPage_VirtualTrackpad}"
+                    Visibility="Collapsed">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon Glyph="&#xEFA5;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="VirtualTrackpadToggle" Toggled="VirtualTrackpadToggle_Toggled" />
+                </ui:SettingsCard>
+
+                <!--  Slide Animation  -->
+                <ui:SettingsCard
+                    Description="{l:Static resx:Resources.SettingsPage_QuicktoolsSlideAnimationDesc}"
+                    Header="{l:Static resx:Resources.SettingsPage_QuicktoolsSlideAnimation}"
+                    IsEnabled="False">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon Glyph="&#xE8B2;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="QuicktoolsSlideAnimationToggle" Toggled="QuicktoolsSlideAnimationToggle_Toggled" />
+                </ui:SettingsCard>
+
+                <!--  Quicktools autohide  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_HideWhenLoseFocusDesc}" Header="{l:Static resx:Resources.SettingsPage_HideWhenLoseFocus}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xED1A;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="Toggle_QuicktoolsAutoHide" Toggled="Toggle_QuicktoolsAutoHide_Toggled" />
+                </ui:SettingsCard>
+
+            </ikw:SimpleStackPanel>
+
+            <!--  Notification options  -->
+            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="{l:Static resx:Resources.SettingsPage_NotificationOptions}" />
+            <ikw:SimpleStackPanel Spacing="3">
+                <!--  Toast notification  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_ToastNotificationDesc}" Header="{l:Static resx:Resources.SettingsPage_ToastNotification}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xE7E7;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="Toggle_Notification" Toggled="Toggle_Notification_Toggled" />
+                </ui:SettingsCard>
+            </ikw:SimpleStackPanel>
+
+            <!--  Third-party applications  -->
+            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="{l:Static resx:Resources.SettingsPage_ThirdPartyApps}" />
+            <ikw:SimpleStackPanel Spacing="3">
+                <!--  RTSS  -->
+                <ui:SettingsCard Description="{l:Static resx:Resources.SettingsPage_RivaTunerStatisticsServerDesc}" Header="{l:Static resx:Resources.SettingsPage_RivaTunerStatisticsServer}">
+                    <ui:SettingsCard.HeaderIcon>
+                        <ui:FontIcon FontFamily="{DynamicResource SymbolThemeFontFamily}" Glyph="&#xEA6C;" />
+                    </ui:SettingsCard.HeaderIcon>
+                    <ui:ToggleSwitch Name="Toggle_RTSS" Toggled="Toggle_RTSS_Toggled" />
+                </ui:SettingsCard>
+            </ikw:SimpleStackPanel>
+
+            <!--  Experimental options  -->
+            <ikw:SimpleStackPanel Spacing="3" Visibility="Collapsed">
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="{l:Static resx:Resources.SettingsPage_Experimental}" />
+            </ikw:SimpleStackPanel>
+
+        </ikw:SimpleStackPanel>
+    </Grid>
+</Page>

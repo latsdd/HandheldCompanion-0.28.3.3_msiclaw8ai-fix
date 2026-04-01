@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(powershell -Command \"[System.Diagnostics.FileVersionInfo]::GetVersionInfo\\('D:\\\\HandheldCompanion-0.28.3.3\\\\Resources\\\\LibreHardwareMonitorLib.dll'\\) | Format-List *Version*,*Product*\")",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(gh api:*)",
+      "Bash(gh release:*)",
+      "Bash(gh --version)",
+      "Bash(powershell -Command \"[System.Diagnostics.FileVersionInfo]::GetVersionInfo\\('D:\\\\HandheldCompanion-0.28.3.3\\\\bin\\\\Release\\\\net10.0-windows10.0.22621.0\\\\win-x64\\\\LibreHardwareMonitorLib.dll'\\) | Select ProductVersion\")",
+      "Bash(powershell -Command \"[System.Reflection.Assembly]::LoadFrom\\('D:\\\\HandheldCompanion-0.28.3.3\\\\bin\\\\Release\\\\net10.0-windows10.0.22621.0\\\\win-x64\\\\LibreHardwareMonitorLib.dll'\\).GetReferencedAssemblies\\(\\) | Format-Table Name, Version\")",
+      "WebFetch(domain:www.nuget.org)",
+      "Bash(powershell -Command \"\\(Get-Item ''Resources\\\\LibreHardwareMonitorLib.dll''\\).VersionInfo | Format-List ProductName,ProductVersion,FileVersion\")"
+    ]
+  }
+}

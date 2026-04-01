@@ -1,0 +1,106 @@
+name: Build and Release HandheldCompanion
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: 'Release version to create'
+        required: false
+        type: string
+
+defaults:
+  run:
+    shell: pwsh
+
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: none
+  id-token: none
+  issues: none
+  discussions: none
+  packages: none
+  pages: none
+  pull-requests: write
+  repository-projects: none
+  security-events: none
+  statuses: none    
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: windows-latest
+
+    env:
+      SOLUTION_NAME: HandheldCompanion
+      INNO_VERSION: 6.6.1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Validate Release
+        if: inputs.releaseVersion != ''
+        run: |
+          if ('${{ inputs.releaseVersion }}' -notmatch '^\d+(?:\.\d+){3}$') {
+            Write-Error "Version ${{ inputs.releaseVersion }} is not valid, please use format Major.Minor.Revision.Build"
+            Exit 1
+          }
+
+          if ('${{ github.ref }}' -ne 'refs/heads/main') {
+            Write-Error "Release may only be created from main"
+            Exit 1
+          }
+
+      # This step sets release version in source control. Uses pwsh for lack of an available github action.
+      - name: Set Release Version in Repo
+        if: inputs.releaseVersion != ''
+        run: |
+          (Get-Content -Path ./HandheldCompanion.iss) -replace "#define MyAppVersion `'\d+(?:\.\d+){3}`'", "#define MyAppVersion '${{ inputs.releaseVersion }}'" | Out-File ./HandheldCompanion.iss
+          (Get-Content -Path ./HandheldCompanion/HandheldCompanion.csproj) -replace "<Version>\d+(?:\.\d+){3}</Version>", "<Version>${{ inputs.releaseVersion }}</Version>" | Out-File ./HandheldCompanion/HandheldCompanion.csproj
+
+      - name: Install Innosetup
+        run: |
+          choco install innosetup --version=${{ env.INNO_VERSION }} --force
+          
+      - name: Setup dotnet 8 SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+
+      - name: Restore Solution
+        run: dotnet restore ${{ env.SOLUTION_NAME }}.sln
+
+      - name: Build Solution
+        run: dotnet build ${{ env.SOLUTION_NAME }}.sln /p:Configuration=Release
+
+      - name: Create Installer
+        run: |
+          iscc.exe ${{ env.SOLUTION_NAME }}.iss
+
+      - name: Create Release Pull Request
+        if: inputs.releaseVersion != ''
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: release/${{ inputs.releaseVersion }}
+          title: 'Release ${{ inputs.releaseVersion }}'
+          commit-message: 'Release ${{ inputs.releaseVersion }}'
+          body: 'Release ${{ inputs.releaseVersion }}. Triggered by ${{ github.actor }}'
+          
+      - name: Create Release
+        if: inputs.releaseVersion != ''
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          body_path: .github/workflows/RELEASE_FORMAT.txt
+          tag_name: ${{ inputs.releaseVersion }}
+          name: "Build ${{ inputs.releaseVersion }}"
+          draft: true
+          fail_on_unmatched_files: true
+          files: |
+            ./install/HandheldCompanion-${{ inputs.releaseVersion }}.exe
